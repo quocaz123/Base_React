@@ -28,10 +28,10 @@ function TableUsers() {
     }
 
     const handleEditUser = (user) => {
-        console.log(user);
         setDataUserEdit(user);
         setIsShowModalEdit(true);
     }
+
 
     useEffect(() => {
         //call api
@@ -124,6 +124,7 @@ function TableUsers() {
                 show={isShowModalEdit}
                 dataUserEdit={dataUserEdit}
                 handleClose={handleClose}
+                handleUpdateTable={handleUpdateTable}
             />
         </>);
 }
