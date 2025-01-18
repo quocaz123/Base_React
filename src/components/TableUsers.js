@@ -6,6 +6,8 @@ import { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import ModelAddNew from './ModalAddNew';
 import ModalEditUser from './ModalEditUser';
+import ModalConfirm from './ModalConfirm';
+import _ from 'lodash';
 function TableUsers() {
 
     const [listUsers, setListUsers] = useState([]);
@@ -15,11 +17,14 @@ function TableUsers() {
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
     const [isShowModalEdit, setIsShowModalEdit] = useState(false);
     const [dataUserEdit, setDataUserEdit] = useState({});
+    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+    const [dataUserDelete, setDataUserDelete] = useState({});
 
 
     const handleClose = () => {
         setIsShowModalAddNew(false);
         setIsShowModalEdit(false);
+        setIsShowModalDelete(false);
     };
 
 
@@ -52,10 +57,22 @@ function TableUsers() {
         }
     }
 
+    const handleDeleteUser = (user) => {
+        setIsShowModalDelete(true);
+        setDataUserDelete(user);
+
+    }
+
     const handlePageClick = async (event) => {
         console.log("envent: ", event);
         // + convent string to number
         getUsers(+event.selected + 1);
+    }
+
+    const handleDeleteUserFromModal = (user) => {
+        let cloneListUsers = _.cloneDeep(listUsers);
+        cloneListUsers = cloneListUsers.filter(item => item.id !== user.id);
+        setListUsers(cloneListUsers);
     }
 
     return (
@@ -86,7 +103,7 @@ function TableUsers() {
                                     <td>{item.last_name}</td>
                                     <td>
                                         <button className='btn btn-warning mx-3' onClick={() => handleEditUser(item)}>Edit</button>
-                                        <button className='btn btn-danger'>Delete</button>
+                                        <button className='btn btn-danger' onClick={() => handleDeleteUser(item)}>Delete</button>
                                     </td>
                                 </tr>
                             )
@@ -125,6 +142,12 @@ function TableUsers() {
                 dataUserEdit={dataUserEdit}
                 handleClose={handleClose}
                 handleUpdateTable={handleUpdateTable}
+            />
+            <ModalConfirm
+                show={isShowModalDelete}
+                handleClose={handleClose}
+                dataUserDelete={dataUserDelete}
+                handleDeleteUserFromModal={handleDeleteUserFromModal}
             />
         </>);
 }
